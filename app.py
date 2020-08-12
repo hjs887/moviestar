@@ -17,13 +17,20 @@ def home():
 def show_stars():
     # 1. db에서 mystar 목록 전체를 검색합니다. ID는 제외하고 like 가 많은 순으로 정렬합니다.
     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
+    stars = list(db.mystar.find({}, {'_id': 0}))
+
     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
-    return jsonify({'result': 'success', 'msg': 'list 연결되었습니다!'})
+    result = {
+        'result': 'success',
+        'star_list': stars
+    }
+    return jsonify(result)
 
 
 @app.route('/api/like', methods=['POST'])
 def like_star():
     # 1. 클라이언트가 전달한 name_give를 name_receive 변수에 넣습니다.
+    name_receive = request.form['name_give']
     # 2. mystar 목록에서 find_one으로 name이 name_receive와 일치하는 star를 찾습니다.
     # 3. star의 like 에 1을 더해준 new_like 변수를 만듭니다.
     # 4. mystar 목록에서 name이 name_receive인 문서의 like 를 new_like로 변경합니다.
